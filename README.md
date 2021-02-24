@@ -90,9 +90,18 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 ## Docker Image Build Scripts
 Run the following command to build the docker image
 `docker build -t <repository-name>:<TAG> <direcotry containing the DOCKERFILE>`
+> docker build -t stacker:0.1 .
 
 ## Docker run
 `docker run -it --rm -v ${PWD}:/app -v /app/node_modules -p 3001:3000 -e CHOKIDAR_USEPOLLING=true <repository-name>:<TAG>`
 
+---
+**Windows** : `docker run -it --rm -v %cd%:/app -v /app/node_modules -p 3001:3000 -e CHOKIDAR_USEPOLLING=true <repository-name>:<TAG>`
+`docker run -it --rm -v %cd%:/app -v /app/node_modules -p 3001:3000 -e CHOKIDAR_USEPOLLING=true stacker:0.1`
+
+---
 ## Docker compose run
 `docker-compose up -d --build`
+
+
+docker run -it --rm -v ${PWD}:/app -v /app/node_modules -p 3001:3000 -e CHOKIDAR_USEPOLLING=true stacker:0.1
