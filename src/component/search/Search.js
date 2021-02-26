@@ -3,17 +3,9 @@ import React, { Component } from 'react';
 import SearchBar from "material-ui-search-bar";
 
 import './Search.css';
-import { render } from '@testing-library/react';
 
 
 class Search extends Component {
-    constructor(props) {
-        super(props);
-      }
-
-    // doSomethingWith(state) {
-    //     console.log(state);
-    // }
     doSomethingWith = (state) => {
         console.log(state);
       };
