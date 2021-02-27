@@ -70,9 +70,10 @@ class Question extends Component {
                 this.setState({ questions: data })
             })
     }
-
+    
     render() {
         if (this.state.questions != null) {
+            console.log(this.props.tag);
             let qus = this.state.questions.items;
             const items = []
             for (let i = 0; i < 10; i++) {

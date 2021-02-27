@@ -6,17 +6,21 @@ import './Search.css';
 
 
 class Search extends Component {
-    doSomethingWith = (state) => {
-        console.log(state);
-      };
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchTag: "",
+    };
+
+  }
 
     render() {
         return (
         <SearchBar
-          value={this.props.placeholder}
-          onChange={(newValue) => this.props.placeholder = newValue}
-          // onChange={(newValue) => this.setState({ value: newValue })}
-          onRequestSearch={() => this.doSomethingWith(this.props.placeholder)}
+          placeholder='Search me'
+          // onChange={(newValue) => this.props.placeholder = newValue}
+          onChange={(newValue) => this.setState({ searchTag: newValue })}
+          onRequestSearch={() => this.props.handler(this.state.searchTag)}
       />
         );
     }
