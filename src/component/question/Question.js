@@ -9,6 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
 import ReactHtmlParser from "react-html-parser";
+import { useAsync } from 'react-async';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -24,10 +25,10 @@ const useStyles = makeStyles((theme) => ({
         background: '#070707',
         borderWidth: '50px',
     },
-    accordDetails : {
+    accordDetails: {
         textAlign: 'left'
     },
-    
+
 }));
 function CardQuestion(props) {
     const classes = useStyles();
@@ -53,46 +54,34 @@ function CardQuestion(props) {
     );
 }
 
-class Question extends Component {
+// Then we'll fetch user data from this API
+const loadQuestions = async () =>
+    await fetch("https://api.stackexchange.com/2.2/questions?order=desc&sort=creation&site=stackoverflow&filter=!9_bDDxJY5&tagged=java")
+        .then(res => (res.ok ? res : Promise.reject(res)))
+        .then(res => res.json())
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            questions: null
-        }
-    }
-    componentDidMount() {
-        let url = 'https://api.stackexchange.com/2.2/questions?order=desc&sort=creation&site=stackoverflow&filter=!9_bDDxJY5&tagged=' + this.props.tag;
-
-        fetch(url)
-            .then(res => res.json())
-            .then((data) => {
-                this.setState({ questions: data })
-            })
-    }
-    
-    render() {
-        if (this.state.questions != null) {
-            console.log(this.props.tag);
-            let qus = this.state.questions.items;
-            const items = []
-            for (let i = 0; i < 10; i++) {
-                items.push(<CardQuestion name={qus[i]} key={qus[i].question_id} />)
-            }
-            return (
-                <div className="question-main">
-                    {items}
-                </div>
-
-            );
-        }
+function Question() {
+    const { data, error, isLoading } = useAsync({ promiseFn: loadQuestions })
+    if (isLoading) {
         return (
             <div className="question-main">
                 <CircularProgress />
             </div>
-
         );
-
+    }
+    if (error) return 'Something went wrong: ${error.message}'
+    if (data) {
+        var qus = data.items;
+        var items = []
+        for (let i = 0; i < 10; i++) {
+            items.push(<CardQuestion name={qus[i]} key={qus[i].question_id} />)
+        }
+        return (
+            <div className="question-main">
+                {items}
+                {/* <h1>Hello</h1> */}
+            </div>
+        );
     }
 }
 
