@@ -12,11 +12,11 @@ class Search extends Component {
 
     render() {
         return (
-            <SearchBar
-        value={this.props.placeholder}
-        onChange={(newValue) => this.props.placeholder = newValue}
-        // onChange={(newValue) => this.setState({ value: newValue })}
-        onRequestSearch={() => this.doSomethingWith(this.props.placeholder)}
+        <SearchBar
+          value={this.props.placeholder}
+          onChange={(newValue) => this.props.placeholder = newValue}
+          // onChange={(newValue) => this.setState({ value: newValue })}
+          onRequestSearch={() => this.doSomethingWith(this.props.placeholder)}
       />
         );
     }

@@ -1,3 +1,4 @@
+import './Question.css';
 import { Component } from "react";
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -16,11 +17,12 @@ const useStyles = makeStyles((theme) => ({
     heading: {
         fontSize: theme.typography.pxToRem(15),
         fontWeight: theme.typography.fontWeightRegular,
-
+        color: '#3966ac',
     },
     accordSummary: {
         background: '#070707',
         borderWidth: '50px',
+        width: ''
     },
     accordDetails : {
         textAlign: 'left'
@@ -30,7 +32,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 function CardQuestion(props) {
     const classes = useStyles();
-    console.log(props.name);
     return (
         <Accordion>
             <AccordionSummary
@@ -61,8 +62,6 @@ class Question extends Component {
         }
     }
     componentDidMount() {
-        let tagg = this.props.tag;
-        console.log(tagg);
         let url = 'https://api.stackexchange.com/2.2/questions?order=desc&sort=creation&site=stackoverflow&filter=!9_bDDxJY5&tagged=' + this.props.tag;
 
         fetch(url)
@@ -74,7 +73,6 @@ class Question extends Component {
 
     render() {
         if (this.state.questions != null) {
-            console.log(this.state.questions.items);
             let qus = this.state.questions.items;
             const items = []
             for (let i = 0; i < 10; i++) {
@@ -82,9 +80,6 @@ class Question extends Component {
             }
             return (
                 <div className="question-main">
-                    {/* <CardQuestion name={qus[0].title} />
-                    <CardQuestion name="Card 2" />
-                    <CardQuestion name="Card 3" /> */}
                     {items}
                 </div>
 
