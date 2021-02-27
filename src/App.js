@@ -29,9 +29,11 @@ class App extends Component {
       console.log(this.state.tag);
       return (
         <div className="App">
-          <header className="App-header">
+          <header className="App-header-after">
           <Search placeholder="Search" handler = {this.handler} />
+          <div className="App-questions">
           <Question tag = {this.state.tag}/>
+          </div>
           </header>
         </div>);
     } else {

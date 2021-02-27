@@ -12,21 +12,20 @@ import ReactHtmlParser from "react-html-parser";
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        width: '50%',
+        // width: '50%',
     },
     heading: {
         fontSize: theme.typography.pxToRem(15),
         fontWeight: theme.typography.fontWeightRegular,
         color: '#3966ac',
+        textAlign: 'center'
     },
     accordSummary: {
         background: '#070707',
         borderWidth: '50px',
-        width: ''
     },
     accordDetails : {
         textAlign: 'left'
-
     },
     
 }));
@@ -42,6 +41,7 @@ function CardQuestion(props) {
                 <Typography className={classes.heading}>{props.name.title}</Typography>
                 <Typography className={classes.heading}>{props.name.score}</Typography>
                 <Typography className={classes.heading}>{props.name.creation_date}</Typography>
+                {/* <div>{props.name.title} {props.name.score} {props.name.creation_date}</div> */}
             </AccordionSummary>
             <AccordionDetails>
                 <Typography className={classes.accordDetails}>
