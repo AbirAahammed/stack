@@ -54,14 +54,23 @@ function CardQuestion(props) {
     );
 }
 
+// const loadPlayer = async ({ playerId }, { signal }) => {
+//     const res = await fetch(`/api/players/${playerId}`, { signal })
+//     if (!res.ok) throw new Error(res.statusText)
+//     return res.json()
+//   }
+
+  
 // Then we'll fetch user data from this API
-const loadQuestions = async () =>
-    await fetch("https://api.stackexchange.com/2.2/questions?order=desc&sort=creation&site=stackoverflow&filter=!9_bDDxJY5&tagged=java")
+const loadQuestions = async ({tag}) =>
+    await fetch(`https://api.stackexchange.com/2.2/questions?order=desc&sort=creation&site=stackoverflow&filter=!9_bDDxJY5&tagged=${tag}`)
         .then(res => (res.ok ? res : Promise.reject(res)))
         .then(res => res.json())
+        .then(console.log('URL : ', `https://api.stackexchange.com/2.2/questions?order=desc&sort=creation&site=stackoverflow&filter=!9_bDDxJY5&tagged=${tag}`))
 
-function Question() {
-    const { data, error, isLoading } = useAsync({ promiseFn: loadQuestions })
+function Question({tag}) {
+    console.log("Question Tag", tag);
+    const { data, error, isLoading } = useAsync({ promiseFn: loadQuestions, tag: tag })
     if (isLoading) {
         return (
             <div className="question-main">
@@ -69,7 +78,7 @@ function Question() {
             </div>
         );
     }
-    if (error) return 'Something went wrong: ${error.message}'
+    if (error) return `Something went wrong: ${error.message}`
     if (data) {
         var qus = data.items;
         var items = []
