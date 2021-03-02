@@ -1,5 +1,5 @@
 import './Question.css';
-import { Component } from "react";
+import { Component, useState, useEffect } from "react";
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import Accordion from '@material-ui/core/Accordion';
@@ -10,6 +10,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
 import ReactHtmlParser from "react-html-parser";
 import { useAsync } from 'react-async';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -54,32 +55,22 @@ function CardQuestion(props) {
     );
 }
 
-// const loadPlayer = async ({ playerId }, { signal }) => {
-//     const res = await fetch(`/api/players/${playerId}`, { signal })
-//     if (!res.ok) throw new Error(res.statusText)
-//     return res.json()
-//   }
-
-  
-// Then we'll fetch user data from this API
-const loadQuestions = async ({tag}) =>
-    await fetch(`https://api.stackexchange.com/2.2/questions?order=desc&sort=creation&site=stackoverflow&filter=!9_bDDxJY5&tagged=${tag}`)
-        .then(res => (res.ok ? res : Promise.reject(res)))
-        .then(res => res.json())
-        .then(console.log('URL : ', `https://api.stackexchange.com/2.2/questions?order=desc&sort=creation&site=stackoverflow&filter=!9_bDDxJY5&tagged=${tag}`))
 
 function Question({tag}) {
-    console.log("Question Tag", tag);
-    const { data, error, isLoading } = useAsync({ promiseFn: loadQuestions, tag: tag })
-    if (isLoading) {
-        return (
-            <div className="question-main">
-                <CircularProgress />
-            </div>
-        );
-    }
-    if (error) return `Something went wrong: ${error.message}`
-    if (data) {
+    const [data, setData] = useState({ hits: [] });
+    useEffect(async () => {
+        const fetchData = async () => {
+            const result = await axios(
+              `https://api.stackexchange.com/2.2/questions?order=desc&sort=creation&site=stackoverflow&filter=!9_bDDxJY5&tagged=${tag}`,
+            );
+       
+            setData(result.data);
+        };
+        fetchData();
+
+      }, [tag]);
+    if (data.items !== undefined) {
+        console.log(data);
         var qus = data.items;
         var items = []
         for (let i = 0; i < 10; i++) {
@@ -89,6 +80,12 @@ function Question({tag}) {
             <div className="question-main">
                 {items}
                 {/* <h1>Hello</h1> */}
+            </div>
+        );
+    } else {
+        return (
+            <div className="question-main">
+                <CircularProgress />
             </div>
         );
     }
