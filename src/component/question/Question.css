@@ -1,5 +1,16 @@
-.question-main{
+.question-main {
     width: 70%;
     height: auto;
     margin: auto;
 }
+
+.circular-progress {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -50px;
+    margin-left: -50px;
+    width: 100px;
+    height: 100px;
+}
+

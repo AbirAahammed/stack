@@ -32,9 +32,31 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  /* color: white; */
+  color: #3966ac;
 }
 
 .App-questions {
   
 }
+
+.title {
+  margin-bottom: auto;
+  font-weight: bold;
+  font-size: 2rem;
+  /* color: #3966ac; */
+}
+.bar {
+  margin-bottom: auto;
+
+}
+.title-root {
+  /* color:aqua; */
+}
+.appbar {
+  height: 45px;
+  font-size: 2rem;
+  font-weight: bold;
+  padding-left: 2px;
+}
+

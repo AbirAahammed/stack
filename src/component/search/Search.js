@@ -18,6 +18,7 @@ class Search extends Component {
         return (
         <SearchBar
           placeholder='Search me'
+          className='searchbar'
           // onChange={(newValue) => this.props.placeholder = newValue}
           onChange={(newValue) => this.setState({ searchTag: newValue })}
           onRequestSearch={() => this.props.handler(this.state.searchTag)}

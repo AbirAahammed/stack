@@ -1,5 +1,5 @@
 import './Question.css';
-import { Component, useState, useEffect } from "react";
+import {useState, useEffect } from "react";
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import Accordion from '@material-ui/core/Accordion';
@@ -9,9 +9,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
 import ReactHtmlParser from "react-html-parser";
-import { useAsync } from 'react-async';
 import axios from 'axios';
 
+
+import Answer from '../answer/Answer';
+
+const url = `https://api.stackexchange.com/2.2/questions?order=desc&sort=activity&site=stackoverflow&filter=!0VdjgZjD(j7sAWyaYznHKJthy&page=1&pagesize=10&tagged=`
 const useStyles = makeStyles((theme) => ({
     root: {
         // width: '50%',
@@ -27,10 +30,28 @@ const useStyles = makeStyles((theme) => ({
         borderWidth: '50px',
     },
     accordDetails: {
-        textAlign: 'left'
+        textAlign: 'left',
+        overflow: 'auto',
+        flexDirection: 'column'
     },
-
+    answer: {
+    }
 }));
+function HandleAnswers(props) {
+    const classes = useStyles();
+    var items = []
+
+    for (let i = 0; i < props.props.length; i++) {
+        items.push(<Answer className={classes.answer} props={props.props[i]} />)
+    }
+    return (
+        <div>
+            <p>Answers</p>
+            {items}
+            {/* <h1>Hello</h1> */}
+        </div>
+    );
+}
 function CardQuestion(props) {
     const classes = useStyles();
     return (
@@ -39,42 +60,60 @@ function CardQuestion(props) {
                 className={classes.accordSummary}
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
-                id={props.question_id}>
-                <Typography className={classes.heading}>{props.name.title}</Typography>
-                <Typography className={classes.heading}>{props.name.score}</Typography>
-                <Typography className={classes.heading}>{props.name.creation_date}</Typography>
+                id={props.props.question_id}
+            >
+                <Typography className={classes.heading}>{props.props.title}</Typography>
+                <Typography className={classes.heading}>{props.props.score}</Typography>
+                <Typography className={classes.heading}>{props.props.creation_date}</Typography>
                 {/* <div>{props.name.title} {props.name.score} {props.name.creation_date}</div> */}
             </AccordionSummary>
-            <AccordionDetails>
+            <AccordionDetails
+                classes={{
+                    root: classes.accordDetails, // class name, e.g. `classes-nesting-root-x`
+                    label: classes.label, // class name, e.g. `classes-nesting-label-x`
+                }}
+            >
                 <Typography className={classes.accordDetails}>
-                    <div>{ReactHtmlParser(props.name.body)}</div>
+                    <div>{ReactHtmlParser(props.props.body)}</div>
 
                 </Typography>
+                {props.props.is_answered === true ? <HandleAnswers props={props.props.answers} /> : null}
+
             </AccordionDetails>
         </Accordion>
     );
 }
 
 
-function Question({tag}) {
-    const [data, setData] = useState({ hits: [] });
-    useEffect(async () => {
-        const fetchData = async () => {
-            const result = await axios(
-              `https://api.stackexchange.com/2.2/questions?order=desc&sort=creation&site=stackoverflow&filter=!9_bDDxJY5&tagged=${tag}`,
-            );
-       
-            setData(result.data);
-        };
-        fetchData();
+// Or [] if effect doesn't need props or state
 
-      }, [tag]);
-    if (data.items !== undefined) {
-        console.log(data);
+function Question({ tag }) {
+    const classes = useStyles();
+    const [data, setData] = useState({ hits: [] });
+    const [isLoading, setLoading] = useState(true)
+    useEffect(() => {
+        async function fetchData() {
+            setLoading(true);
+            // You can await here
+            const result = await axios(url + tag,
+                // `https://api.stackexchange.com/2.2/questions?order=desc&sort=creation&site=stackoverflow&filter=!9_bDDxJY5&tagged=${tag}`,
+            );
+
+            setData(result.data);
+            setLoading(false);
+            // ...
+        }
+        fetchData();
+    }, [tag]);
+    if (!isLoading && data.items !== undefined) {
+        // if (data.items !== undefined) {
+        // for (let index = 0; index < data.items.length; index++) {
+        //     console.log(data.items[index].is_answered? data.items[index].answers: "None");            
+        // }
         var qus = data.items;
         var items = []
         for (let i = 0; i < 10; i++) {
-            items.push(<CardQuestion name={qus[i]} key={qus[i].question_id} />)
+            items.push(<CardQuestion props={qus[i]} />)
         }
         return (
             <div className="question-main">
@@ -85,7 +124,7 @@ function Question({tag}) {
     } else {
         return (
             <div className="question-main">
-                <CircularProgress />
+                <CircularProgress className="circular-progress" color="secondary" thickness={1.0} size={150} />
             </div>
         );
     }
