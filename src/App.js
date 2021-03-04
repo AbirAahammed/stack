@@ -1,11 +1,13 @@
 import './App.css';
 import Search from './component/search/Search';
-import { Component } from 'react';
+import { useState } from 'react';
 import Question from './component/question/Question';
 
-
-
 import AppBar from '@material-ui/core/AppBar';
+
+import SearchBar from "material-ui-search-bar";
+
+import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -13,78 +15,89 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
 
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+const useStyles = makeStyles((theme) => ({
+  root: {
+    // flexGrow: 1,
+    height: '40px',
+    marginBottom: '20px',
 
-const theme = createMuiTheme({
-  overrides: {
-    // Style sheet name ⚛️
-    MuiTypography: {
-      // Name of the rule
-      root: {
-        // Some CSS
-        marginBottom: 'auto',
-        color: 'aqua'
-      },
-    },
   },
-});
 
-class App extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      tag: "",
-    };
-    this.handler = this.handler.bind(this);
-
+  title: {
+    // flexGrow: 1,
+    marginBottom: '25px',
+    fontSize: 30,
+    fontWeight: 'bold',
+    fontFamily: 'Times New Roman'
+  },
+  appbar :{
+    height: '40px',
+  },
+  searchbar : {
+    
   }
+}));
 
-  handler(searchTag) {
-    this.setState({ tag: searchTag });
-  }
 
-  render() {
-    if (this.state.tag !== "") {
-      console.log(this.state.tag);
-      return (
-        <>
-          <div className="App">
+export default function App() {
+  const classes = useStyles();
 
-          <AppBar position="static" classes={{ root: 'appbar' }} >
-              {/* <Toolbar className='bar'> */}
-                {/* <Typography variant={'h4'} className='title' classes={{ root: 'title-root' }}> */}
+  const [tag, setTag] = useState('');
+  if (tag !== "") {
+    return (
+      <>
+        <div className="App">
+
+          <div className={classes.root}>
+            <AppBar position="static" className={classes.appbar}>
+              <Toolbar>
+                <Typography variant="h6" className={classes.title}>
                   Stack
-                {/* </Typography> */}
-              {/* </Toolbar> */}
+                </Typography>
+              </Toolbar>
             </AppBar>
-            <header className="App-header-after">
-              <Search placeholder="Search" handler={this.handler} />
-              <div className="App-questions">
-                <Question tag={this.state.tag} />
-              </div>
-            </header>
-          </div></>);
-    } else {
-      return (
-        <>
-          <div className="App">
+          </div>
+          <header className="App-header-after">
+            <SearchBar
+              placeholder='Search me'
+              className='searchbar'
+              // onChange={(newValue) => this.props.placeholder = newValue}
+              // onChange={(newValue) => setState({ searchTag: newValue })}
+              onRequestSearch={(newValue) => setTag(newValue)}
+            />            <div className="App-questions">
+              <Question tag={tag} />
+            </div>
+          </header>
+        </div>
+      </>);
+  } else {
+    return (
+      <>
+        <div className="App">
 
-            <AppBar position="static" classes={{ root: 'appbar' }} >
-              {/* <Toolbar className='bar'> */}
-                {/* <Typography variant={'h4'} className='title' classes={{ root: 'title-root' }}> */}
+          <div className={classes.root}>
+            <AppBar position="static" className={classes.appbar}>
+              <Toolbar>
+
+                <Typography className={classes.title}>
                   Stack
-                {/* </Typography> */}
-              {/* </Toolbar> */}
+          </Typography>
+              </Toolbar>
             </AppBar>
+          </div>
 
-            <header className="App-header">
-              <Search placeholder="Search" handler={this.handler} />
-            </header>
-          </div></>
-      );
-    }
+          <header className="App-header">
+            <SearchBar
+              placeholder='Search me'
+              className='searchbar'
+              // onChange={(newValue) => this.props.placeholder = newValue}
+              // onChange={(newValue) => setState({ searchTag: newValue })}
+              onRequestSearch={(newValue) => setTag(newValue)}
+            />
+          </header>
+        </div></>
+    );
   }
+
 }
 
-export default App;

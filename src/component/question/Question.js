@@ -18,6 +18,10 @@ const url = `https://api.stackexchange.com/2.2/questions?order=desc&sort=activit
 const useStyles = makeStyles((theme) => ({
     root: {
         // width: '50%',
+        backgroundColor:'#ffffff',
+    },
+    accordion : {
+        backgroundColor:'transparent',
     },
     heading: {
         fontSize: theme.typography.pxToRem(15),
@@ -28,11 +32,14 @@ const useStyles = makeStyles((theme) => ({
     accordSummary: {
         background: '#070707',
         borderWidth: '50px',
+        borderRadius: '10px'
     },
     accordDetails: {
         textAlign: 'left',
         overflow: 'auto',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        backgroundColor:'#78a47e',
+        borderRadius:'10px'
     },
     answer: {
     }
@@ -55,7 +62,7 @@ function HandleAnswers(props) {
 function CardQuestion(props) {
     const classes = useStyles();
     return (
-        <Accordion>
+        <Accordion className={classes.accordion}>
             <AccordionSummary
                 className={classes.accordSummary}
                 expandIcon={<ExpandMoreIcon />}
