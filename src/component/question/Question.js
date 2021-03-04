@@ -1,5 +1,5 @@
 import './Question.css';
-import {useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import Accordion from '@material-ui/core/Accordion';
@@ -10,6 +10,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
 import ReactHtmlParser from "react-html-parser";
 import axios from 'axios';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
 
 
 import Answer from '../answer/Answer';
@@ -18,28 +20,33 @@ const url = `https://api.stackexchange.com/2.2/questions?order=desc&sort=activit
 const useStyles = makeStyles((theme) => ({
     root: {
         // width: '50%',
-        backgroundColor:'#ffffff',
+        // backgroundColor:'#ffffff',
+        // backgroundColor:'#2d7786',
     },
-    accordion : {
-        backgroundColor:'transparent',
+    accordion: {
+        backgroundColor: 'transparent',
     },
     heading: {
         fontSize: theme.typography.pxToRem(15),
         fontWeight: theme.typography.fontWeightRegular,
-        color: '#3966ac',
-        textAlign: 'center'
+        color: '#fff',
     },
     accordSummary: {
-        background: '#070707',
+        background: '#2d7786',
         borderWidth: '50px',
-        borderRadius: '10px'
+        borderRadius: '10px',
+        overflow: 'auto',
+
+    },
+    accordSummaryTitle: {
+
     },
     accordDetails: {
         textAlign: 'left',
         overflow: 'auto',
         flexDirection: 'column',
-        backgroundColor:'#78a47e',
-        borderRadius:'10px'
+        backgroundColor: '#40aabf',
+        borderRadius: '10px'
     },
     answer: {
     }
@@ -69,9 +76,21 @@ function CardQuestion(props) {
                 aria-controls="panel1a-content"
                 id={props.props.question_id}
             >
-                <Typography className={classes.heading}>{props.props.title}</Typography>
-                <Typography className={classes.heading}>{props.props.score}</Typography>
-                <Typography className={classes.heading}>{props.props.creation_date}</Typography>
+                <Grid container spacing={3}>
+                    <Grid item xs={10}>
+                        <Typography className={classes.heading}>{props.props.title}</Typography>
+                    </Grid>
+                    <Grid item xs={2}>
+                        {/* <Container maxWidth="sm"> */}
+                            <Typography className={classes.heading}>Score : {props.props.score}</Typography>
+                            <Typography className={classes.heading}>ID: {props.props.creation_date}</Typography>
+                        {/* </Container> */}
+                    </Grid>
+                </Grid>
+
+                
+                
+
                 {/* <div>{props.name.title} {props.name.score} {props.name.creation_date}</div> */}
             </AccordionSummary>
             <AccordionDetails
