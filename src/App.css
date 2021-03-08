@@ -67,3 +67,7 @@
 .space {
   height: 20px;
 }
+
+#root > div {
+  height:100%;
+}

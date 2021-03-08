@@ -16,7 +16,6 @@ import Grid from '@material-ui/core/Grid';
 
 import Answer from '../answer/Answer';
 
-const url = `https://api.stackexchange.com/2.2/questions?order=desc&sort=activity&site=stackoverflow&filter=!0VdjgZjD(j7sAWyaYznHKJthy&page=1&pagesize=10&tagged=`
 const useStyles = makeStyles((theme) => ({
     root: {
         // width: '50%',
@@ -76,14 +75,15 @@ function CardQuestion(props) {
                 aria-controls="panel1a-content"
                 id={props.props.question_id}
             >
-                <Grid container spacing={3}>
+                <Grid container spacing={1}>
                     <Grid item xs={10}>
                         <Typography className={classes.heading}>{props.props.title}</Typography>
+                        <Typography className={classes.heading}>Time: {new Date(props.props.creation_date*1000).toUTCString()}</Typography>
+
                     </Grid>
                     <Grid item xs={2}>
                         {/* <Container maxWidth="sm"> */}
                             <Typography className={classes.heading}>Score : {props.props.score}</Typography>
-                            <Typography className={classes.heading}>ID: {props.props.creation_date}</Typography>
                         {/* </Container> */}
                     </Grid>
                 </Grid>
@@ -115,30 +115,45 @@ function CardQuestion(props) {
 
 function Question({ tag }) {
     const classes = useStyles();
-    const [data, setData] = useState({ hits: [] });
-    const [isLoading, setLoading] = useState(true)
-    useEffect(() => {
-        async function fetchData() {
-            setLoading(true);
-            // You can await here
-            const result = await axios(url + tag,
-                // `https://api.stackexchange.com/2.2/questions?order=desc&sort=creation&site=stackoverflow&filter=!9_bDDxJY5&tagged=${tag}`,
-            );
+    const [votesData, setVotesData] = useState({ hits: [] });
+    const [creationData, setcreationData] = useState({ hits: [] });
 
-            setData(result.data);
+    const [isLoading, setLoading] = useState(true)
+    let sort = 'votes'
+    
+    useEffect(() => {
+        async function fetchData(sort) {
+            setLoading(true);
+            const url = `https://api.stackexchange.com/2.2/questions?order=desc&sort=${sort}&site=stackoverflow&filter=!0VdjgZjD(j7sAWyaYznHKJthy&page=1&pagesize=10&tagged=${tag}`
+
+            
+            // You can await here
+            let result = await axios(url);
+            setVotesData(result.data);
+
+            sort = 'creation'
+
+            // You can await here
+            result = await axios(url);
+            setcreationData(result.data);
+
             setLoading(false);
             // ...
         }
-        fetchData();
+        fetchData('votes');
     }, [tag]);
-    if (!isLoading && data.items !== undefined) {
-        // if (data.items !== undefined) {
-        // for (let index = 0; index < data.items.length; index++) {
-        //     console.log(data.items[index].is_answered? data.items[index].answers: "None");            
-        // }
-        var qus = data.items;
+    if (!isLoading && votesData.items !== undefined && creationData.items !== undefined) {
+        const qus = [...votesData.items, ...creationData.items];
+        const sortedQus = [].concat(qus)
+            .sort((a, b) => a.creation_date > b.creation_date ? 1 : -1)
+            .map((item, i) => 
+                <div key={i}> {item.matchID} {item.timeM}{item.description}</div>
+            );
+        console.log(votesData.items);
+        console.log(creationData.items);
+        console.log(sortedQus);
         var items = []
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < sortedQus.length; i++) {
             items.push(<CardQuestion props={qus[i]} />)
         }
         return (

@@ -19,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
 
 function Comment(props) {
   const classes = useStyles();
-  console.log(props.comment.body);
   return (
     <Paper classes={{
       root: classes.paper, // class name, e.g. `classes-nesting-root-x`
