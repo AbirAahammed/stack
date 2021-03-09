@@ -1,16 +1,11 @@
 import './Answer.css';
-
-import React from 'react';
+import {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import ReactHtmlParser from "react-html-parser";
 
 import Paper from '@material-ui/core/Paper';
 import HandleComments from '../comment/Comment'
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,16 +26,18 @@ const useStyles = makeStyles((theme) => ({
 
 function Answer(props) {
   const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
+  const [isLoading, setLoading] = useState(true)
+  const [answer, setAnswer] = useState({ hits: [] });
+
 
   return (
     <Paper classes={{
       root: classes.paper, // class name, e.g. `classes-nesting-root-x`
       label: classes.label, // class name, e.g. `classes-nesting-label-x`
       rounded: classes.rounded
-    }} elevation={10} square={false} variant="outlined" ><div>{ReactHtmlParser(props.props.body)}</div>
-    {/* <HandleComments comments={props.props.comments}/> */}
-    {props.props.comments !== undefined ? <HandleComments comments={props.props.comments}/> : null}
+    }} elevation={10} square={false} variant="outlined" ><div>{props.props.body !== undefined ? ReactHtmlParser(props.props.body) : props.props.answer_id}</div>
+      {/* <HandleComments comments={props.props.comments}/> */}
+      {props.props.comments !== undefined ? <HandleComments comments={props.props.comments} /> : null}
 
     </Paper>
   );

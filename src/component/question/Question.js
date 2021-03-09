@@ -10,7 +10,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
 import ReactHtmlParser from "react-html-parser";
 import axios from 'axios';
-import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 
 
@@ -114,27 +113,26 @@ function CardQuestion(props) {
 // Or [] if effect doesn't need props or state
 
 function Question({ tag }) {
-    const classes = useStyles();
     const [votesData, setVotesData] = useState({ hits: [] });
     const [creationData, setcreationData] = useState({ hits: [] });
 
     const [isLoading, setLoading] = useState(true)
-    let sort = 'votes'
     
     useEffect(() => {
+
         async function fetchData(sort) {
             setLoading(true);
-            const url = `https://api.stackexchange.com/2.2/questions?order=desc&sort=${sort}&site=stackoverflow&filter=!0VdjgZjD(j7sAWyaYznHKJthy&page=1&pagesize=10&tagged=${tag}`
-
-            
+            // const url = `https://api.stackexchange.com/2.2/questions?order=desc&sort=${sort}&site=stackoverflow&filter=!0VdjgZjD(j7sAWyaYznHKJthy&page=1&pagesize=10&tagged=${tag}`
+            // const url = `https://api.stackexchange.com/2.2/questions?order=desc&sort=${sort}&site=stackoverflow&filter=!9_bDDxJY5&page=1&pagesize=10&tagged=${tag}`
+            const url_votes = `https://api.stackexchange.com/2.2/questions?page=1&pagesize=10&order=desc&sort=votes&tagged=${tag}&site=stackoverflow&filter=!SmM8gcJ5EA-Fj.eW0)`
             // You can await here
-            let result = await axios(url);
+            let result = await axios(url_votes);
             setVotesData(result.data);
 
-            sort = 'creation'
+            const url_creation = `https://api.stackexchange.com/2.2/questions?page=1&pagesize=10&order=desc&sort=creation&tagged=${tag}&site=stackoverflow&filter=!SmM8gcJ5EA-Fj.eW0)`
 
             // You can await here
-            result = await axios(url);
+            result = await axios(url_creation);
             setcreationData(result.data);
 
             setLoading(false);
@@ -149,9 +147,8 @@ function Question({ tag }) {
             .map((item, i) => 
                 <div key={i}> {item.matchID} {item.timeM}{item.description}</div>
             );
-        console.log(votesData.items);
-        console.log(creationData.items);
-        console.log(sortedQus);
+        
+        console.log(new Date());
         var items = []
         for (let i = 0; i < sortedQus.length; i++) {
             items.push(<CardQuestion props={qus[i]} />)
@@ -159,7 +156,6 @@ function Question({ tag }) {
         return (
             <div className="question-main">
                 {items}
-                {/* <h1>Hello</h1> */}
             </div>
         );
     } else {
