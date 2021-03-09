@@ -102,7 +102,7 @@ function CardQuestion(props) {
                     <div>{ReactHtmlParser(props.props.body)}</div>
 
                 </Typography>
-                {props.props.is_answered === true ? <HandleAnswers props={props.props.answers} /> : null}
+                {/* {props.props.is_answered === true ? <HandleAnswers props={props.props.answers} /> : null} */}
 
             </AccordionDetails>
         </Accordion>
@@ -115,22 +115,27 @@ function CardQuestion(props) {
 function Question({ tag }) {
     const [votesData, setVotesData] = useState({ hits: [] });
     const [creationData, setcreationData] = useState({ hits: [] });
-
     const [isLoading, setLoading] = useState(true)
-    
-    useEffect(() => {
+    const [startTime, setStartTime] = useState(new Date());
 
+    useEffect(() => {
+        
         async function fetchData(sort) {
             setLoading(true);
+            setStartTime(new Date());
             // const url = `https://api.stackexchange.com/2.2/questions?order=desc&sort=${sort}&site=stackoverflow&filter=!0VdjgZjD(j7sAWyaYznHKJthy&page=1&pagesize=10&tagged=${tag}`
             // const url = `https://api.stackexchange.com/2.2/questions?order=desc&sort=${sort}&site=stackoverflow&filter=!9_bDDxJY5&page=1&pagesize=10&tagged=${tag}`
+            
             const url_votes = `https://api.stackexchange.com/2.2/questions?page=1&pagesize=10&order=desc&sort=votes&tagged=${tag}&site=stackoverflow&filter=!SmM8gcJ5EA-Fj.eW0)`
+            // const url_votes = `http://localhost:8000/questions_votes`;
+            
+            
             // You can await here
             let result = await axios(url_votes);
             setVotesData(result.data);
 
             const url_creation = `https://api.stackexchange.com/2.2/questions?page=1&pagesize=10&order=desc&sort=creation&tagged=${tag}&site=stackoverflow&filter=!SmM8gcJ5EA-Fj.eW0)`
-
+            // const url_creation = `http://localhost:8000/question_creation`;
             // You can await here
             result = await axios(url_creation);
             setcreationData(result.data);
@@ -142,6 +147,7 @@ function Question({ tag }) {
     }, [tag]);
     if (!isLoading && votesData.items !== undefined && creationData.items !== undefined) {
         const qus = [...votesData.items, ...creationData.items];
+        console.log(votesData.items);
         const sortedQus = [].concat(qus)
             .sort((a, b) => a.creation_date > b.creation_date ? 1 : -1)
             .map((item, i) => 
@@ -153,6 +159,7 @@ function Question({ tag }) {
         for (let i = 0; i < sortedQus.length; i++) {
             items.push(<CardQuestion props={qus[i]} />)
         }
+        console.log(new Date() - startTime);
         return (
             <div className="question-main">
                 {items}
