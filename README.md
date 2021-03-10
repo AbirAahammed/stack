@@ -53,6 +53,6 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 
 # Docker
 ## Docker Prod Build
-docker build -f Dockerfile.prod -t abirahammed/stacker:\<tag\>
+docker build -f Dockerfile.prod -t abirahammed/stacker:\<tag\> .
 ## Docker run
 docker run -it -d -p \<host-port\>:80 abirahammed/stacker
