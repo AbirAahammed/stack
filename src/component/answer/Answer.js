@@ -1,16 +1,14 @@
 import './Answer.css';
-
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import ReactHtmlParser from "react-html-parser";
 
 import Paper from '@material-ui/core/Paper';
 import HandleComments from '../comment/Comment'
+import axios from 'axios';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,6 +21,12 @@ const useStyles = makeStyles((theme) => ({
     padding: '20px',
     borderRadius: '15px',
   },
+  heading: {
+    fontSize: theme.typography.pxToRem(13),
+    fontWeight: theme.typography.fontWeightBold,
+    marginTop: '10px',
+    
+  },
   rounded: {
   }
 
@@ -31,19 +35,32 @@ const useStyles = makeStyles((theme) => ({
 
 function Answer(props) {
   const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
+  const [isLoading, setLoading] = useState(false)
+  const [answer, setAnswer] = useState({ hits: [] });
 
   return (
     <Paper classes={{
       root: classes.paper, // class name, e.g. `classes-nesting-root-x`
       label: classes.label, // class name, e.g. `classes-nesting-label-x`
       rounded: classes.rounded
-    }} elevation={10} square={false} variant="outlined" ><div>{ReactHtmlParser(props.props.body)}</div>
-    {/* <HandleComments comments={props.props.comments}/> */}
-    {props.props.comments !== undefined ? <HandleComments comments={props.props.comments}/> : null}
+    }} elevation={10} square={false} variant="outlined" >
+        <div>{!isLoading ? ReactHtmlParser(props.props.body) : <div>isLoading....</div>}</div>
+        <Grid container spacing={1} className = {classes.heading}>
+
+        <Grid item xl >
+          <Typography variant={'inherit'}>Time: {new Date(props.props.creation_date * 1000).toUTCString()}</Typography>
+        </Grid>
+        <Grid item xs>
+          <Typography variant={'inherit'}>Score : {props.props.score}</Typography>
+        </Grid>
+      </Grid>
+        {!isLoading && props.props.comments !== undefined ? <HandleComments comments={props.props.comments} /> : null}
+
+
 
     </Paper>
   );
+
 
 }
 

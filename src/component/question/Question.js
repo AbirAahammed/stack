@@ -10,8 +10,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
 import ReactHtmlParser from "react-html-parser";
 import axios from 'axios';
-import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
+import HandleComments from '../comment/Comment'
 
 
 import Answer from '../answer/Answer';
@@ -52,10 +52,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 function HandleAnswers(props) {
     const classes = useStyles();
-    var items = []
+    // const [isLoading, setLoading] = useState(true)
+    // const [answer, setAnswer] = useState({ hits: [] });
+    // useEffect(() => {
+    //     async function fetchData() {
+    //         console.log(props)
+    //     }
+    //     fetchData();
 
-    for (let i = 0; i < props.props.length; i++) {
-        items.push(<Answer className={classes.answer} props={props.props[i]} />)
+    // }, []);
+    var items = []
+    // console.log(props.props.answers)
+    for (let i = 0; i < props.props.answers.length; i++) {
+        items.push(<Answer className={classes.answer} props={props.props.answers[i]} />)
     }
     return (
         <div>
@@ -67,6 +76,23 @@ function HandleAnswers(props) {
 }
 function CardQuestion(props) {
     const classes = useStyles();
+    const [isLoading, setLoading] = useState(true)
+    const [questionDetails, setQuestionDetails] = useState({ hits: [] });
+    useEffect(() => {
+        async function fetchData() {
+            const url = `https://api.stackexchange.com/2.2/questions/${props.props.question_id}?order=desc&sort=activity&site=stackoverflow&filter=!)rTkraPYPFX1VwYPVrFH`;
+            let result = await axios(url);
+            setQuestionDetails(result.data);
+            setLoading(false);
+        }
+        if (isLoading){
+            fetchData();
+        }
+        if (!isLoading) {
+            console.log(questionDetails.items[0]);
+          }
+
+    }, [questionDetails]);
     return (
         <Accordion className={classes.accordion}>
             <AccordionSummary
@@ -101,9 +127,10 @@ function CardQuestion(props) {
             >
                 <Typography className={classes.accordDetails}>
                     <div>{ReactHtmlParser(props.props.body)}</div>
+                    {!isLoading && questionDetails.items[0].comments !== undefined? <HandleComments comments={questionDetails.items[0].comments}/> :null}
 
                 </Typography>
-                {props.props.is_answered === true ? <HandleAnswers props={props.props.answers} /> : null}
+                {props.props.is_answered === true && !isLoading? <HandleAnswers props={questionDetails.items[0]} /> : null}
 
             </AccordionDetails>
         </Accordion>
@@ -114,27 +141,31 @@ function CardQuestion(props) {
 // Or [] if effect doesn't need props or state
 
 function Question({ tag }) {
-    const classes = useStyles();
     const [votesData, setVotesData] = useState({ hits: [] });
     const [creationData, setcreationData] = useState({ hits: [] });
-
     const [isLoading, setLoading] = useState(true)
-    let sort = 'votes'
-    
+    const [startTime, setStartTime] = useState(new Date());
+
     useEffect(() => {
+        
         async function fetchData(sort) {
             setLoading(true);
-            const url = `https://api.stackexchange.com/2.2/questions?order=desc&sort=${sort}&site=stackoverflow&filter=!0VdjgZjD(j7sAWyaYznHKJthy&page=1&pagesize=10&tagged=${tag}`
-
+            setStartTime(new Date());
+            // const url = `https://api.stackexchange.com/2.2/questions?order=desc&sort=${sort}&site=stackoverflow&filter=!0VdjgZjD(j7sAWyaYznHKJthy&page=1&pagesize=10&tagged=${tag}`
+            // const url = `https://api.stackexchange.com/2.2/questions?order=desc&sort=${sort}&site=stackoverflow&filter=!9_bDDxJY5&page=1&pagesize=10&tagged=${tag}`
+            
+            const url_votes = `https://api.stackexchange.com/2.2/questions?page=1&pagesize=10&order=desc&sort=votes&tagged=${tag}&site=stackoverflow&filter=!SmM8gcJ5EA-Fj.eW0)`
+            // const url_votes = `http://localhost:8000/questions_votes`;
+            
             
             // You can await here
-            let result = await axios(url);
+            let result = await axios(url_votes);
             setVotesData(result.data);
 
-            sort = 'creation'
-
+            const url_creation = `https://api.stackexchange.com/2.2/questions?page=1&pagesize=10&order=desc&sort=creation&tagged=${tag}&site=stackoverflow&filter=!SmM8gcJ5EA-Fj.eW0)`
+            // const url_creation = `http://localhost:8000/question_creation`;
             // You can await here
-            result = await axios(url);
+            result = await axios(url_creation);
             setcreationData(result.data);
 
             setLoading(false);
@@ -149,9 +180,7 @@ function Question({ tag }) {
             .map((item, i) => 
                 <div key={i}> {item.matchID} {item.timeM}{item.description}</div>
             );
-        console.log(votesData.items);
-        console.log(creationData.items);
-        console.log(sortedQus);
+        
         var items = []
         for (let i = 0; i < sortedQus.length; i++) {
             items.push(<CardQuestion props={qus[i]} />)
@@ -159,7 +188,7 @@ function Question({ tag }) {
         return (
             <div className="question-main">
                 {items}
-                {/* <h1>Hello</h1> */}
+                <div>{new Date() - startTime} ms</div>
             </div>
         );
     } else {
@@ -172,3 +201,4 @@ function Question({ tag }) {
 }
 
 export default Question;
+

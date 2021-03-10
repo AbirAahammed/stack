@@ -1,6 +1,5 @@
 import './App.css';
-import Search from './component/search/Search';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Question from './component/question/Question';
 
 import AppBar from '@material-ui/core/AppBar';
@@ -10,9 +9,7 @@ import SearchBar from "material-ui-search-bar";
 import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -41,15 +38,28 @@ const useStyles = makeStyles((theme) => ({
 
 export default function App() {
   const classes = useStyles();
+  const [start, setStart] = useState(new Date());
+  const [end, setEnd] = useState(new Date());
 
   const [tag, setTag] = useState('');
+  useEffect(() => {
+    setEnd(new Date())
+    // const interval = setInterval(
+    //   () => setValue(new Date()),
+    //   1000
+    // );
+ 
+    // return () => {
+    //   clearInterval(interval);
+    // }
+  }, [tag]);
   if (tag !== "") {
     return (
       <>
         <div className="App">
 
           <div className={classes.root}>
-            <AppBar position="static" className={classes.appbar}>
+            <AppBar position="fixed" className={classes.appbar}>
               <Toolbar>
                 <Typography variant="h6" className={classes.title}>
                   Stack
@@ -61,13 +71,13 @@ export default function App() {
             <SearchBar
               placeholder='Search me'
               className='searchbar'
-              // onChange={(newValue) => this.props.placeholder = newValue}
-              // onChange={(newValue) => setState({ searchTag: newValue })}
               onRequestSearch={(newValue) => setTag(newValue)}
             />            <div className="App-questions">
               <Question tag={tag} />
             </div>
           </header>
+          <p>Current time:</p>
+      {/* <Clock value={value} /> */}
         </div>
       </>);
   } else {
@@ -95,6 +105,7 @@ export default function App() {
               onRequestSearch={(newValue) => setTag(newValue)}
             />
           </header>
+          <p>Current time:</p>
         </div></>
     );
   }
