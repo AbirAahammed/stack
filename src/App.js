@@ -42,7 +42,6 @@ export default function App() {
   const [end, setEnd] = useState(new Date());
 
   const [tag, setTag] = useState('');
-  console.log(new Date());
   useEffect(() => {
     setEnd(new Date())
     // const interval = setInterval(

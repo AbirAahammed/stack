@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import ReactHtmlParser from "react-html-parser";
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
+import HandleComments from '../comment/Comment'
 
 
 import Answer from '../answer/Answer';
@@ -51,10 +52,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 function HandleAnswers(props) {
     const classes = useStyles();
-    var items = []
+    // const [isLoading, setLoading] = useState(true)
+    // const [answer, setAnswer] = useState({ hits: [] });
+    // useEffect(() => {
+    //     async function fetchData() {
+    //         console.log(props)
+    //     }
+    //     fetchData();
 
-    for (let i = 0; i < props.props.length; i++) {
-        items.push(<Answer className={classes.answer} props={props.props[i]} />)
+    // }, []);
+    var items = []
+    // console.log(props.props.answers)
+    for (let i = 0; i < props.props.answers.length; i++) {
+        items.push(<Answer className={classes.answer} props={props.props.answers[i]} />)
     }
     return (
         <div>
@@ -66,6 +76,23 @@ function HandleAnswers(props) {
 }
 function CardQuestion(props) {
     const classes = useStyles();
+    const [isLoading, setLoading] = useState(true)
+    const [questionDetails, setQuestionDetails] = useState({ hits: [] });
+    useEffect(() => {
+        async function fetchData() {
+            const url = `https://api.stackexchange.com/2.2/questions/${props.props.question_id}?order=desc&sort=activity&site=stackoverflow&filter=!)rTkraPYPFX1VwYPVrFH`;
+            let result = await axios(url);
+            setQuestionDetails(result.data);
+            setLoading(false);
+        }
+        if (isLoading){
+            fetchData();
+        }
+        if (!isLoading) {
+            console.log(questionDetails.items[0]);
+          }
+
+    }, [questionDetails]);
     return (
         <Accordion className={classes.accordion}>
             <AccordionSummary
@@ -100,9 +127,10 @@ function CardQuestion(props) {
             >
                 <Typography className={classes.accordDetails}>
                     <div>{ReactHtmlParser(props.props.body)}</div>
+                    {!isLoading && questionDetails.items[0].comments !== undefined? <HandleComments comments={questionDetails.items[0].comments}/> :null}
 
                 </Typography>
-                {/* {props.props.is_answered === true ? <HandleAnswers props={props.props.answers} /> : null} */}
+                {props.props.is_answered === true && !isLoading? <HandleAnswers props={questionDetails.items[0]} /> : null}
 
             </AccordionDetails>
         </Accordion>
@@ -147,22 +175,20 @@ function Question({ tag }) {
     }, [tag]);
     if (!isLoading && votesData.items !== undefined && creationData.items !== undefined) {
         const qus = [...votesData.items, ...creationData.items];
-        console.log(votesData.items);
         const sortedQus = [].concat(qus)
             .sort((a, b) => a.creation_date > b.creation_date ? 1 : -1)
             .map((item, i) => 
                 <div key={i}> {item.matchID} {item.timeM}{item.description}</div>
             );
         
-        console.log(new Date());
         var items = []
         for (let i = 0; i < sortedQus.length; i++) {
             items.push(<CardQuestion props={qus[i]} />)
         }
-        console.log(new Date() - startTime);
         return (
             <div className="question-main">
                 {items}
+                <div>{new Date() - startTime} ms</div>
             </div>
         );
     } else {
@@ -175,3 +201,4 @@ function Question({ tag }) {
 }
 
 export default Question;
+
