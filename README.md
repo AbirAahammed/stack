@@ -4,17 +4,9 @@
     - [`yarn test`](#yarn-test)
     - [`yarn build`](#yarn-build)
     - [`yarn eject`](#yarn-eject)
-  - [Learn More](#learn-more)
-    - [Code Splitting](#code-splitting)
-    - [Analyzing the Bundle Size](#analyzing-the-bundle-size)
-    - [Making a Progressive Web App](#making-a-progressive-web-app)
-    - [Advanced Configuration](#advanced-configuration)
-    - [Deployment](#deployment)
-    - [`yarn build` fails to minify](#yarn-build-fails-to-minify)
 - [Docker](#docker)
-  - [Docker Image Build Scripts](#docker-image-build-scripts)
+  - [Docker Prod Build](#docker-prod-build)
   - [Docker run](#docker-run)
-  - [Docker compose run](#docker-compose-run)
 
 # Getting Started with Create React App
 
@@ -61,6 +53,6 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 
 # Docker
 ## Docker Prod Build
-docker build -f Dockerfile.prod -t stacker:\<tag\>
+docker build -f Dockerfile.prod -t abirahammedstacker:\<tag\>
 ## Docker run
 docker run -it -d -p \<host-port\>:80 abirahammed/stacker
