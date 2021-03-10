@@ -154,7 +154,7 @@ function Question({ tag }) {
             // const url = `https://api.stackexchange.com/2.2/questions?order=desc&sort=${sort}&site=stackoverflow&filter=!0VdjgZjD(j7sAWyaYznHKJthy&page=1&pagesize=10&tagged=${tag}`
             // const url = `https://api.stackexchange.com/2.2/questions?order=desc&sort=${sort}&site=stackoverflow&filter=!9_bDDxJY5&page=1&pagesize=10&tagged=${tag}`
             
-            const url_votes = `https://api.stackexchange.com/2.2/questions?page=1&pagesize=10&order=desc&sort=votes&tagged=${tag}&site=stackoverflow&filter=!SmM8gcJ5EA-Fj.eW0)`
+            const url_votes = `https://api.stackexchange.com/2.2/questions?page=1&pagesize=10&fromdate=${(Date.now()/1000) - 604800}&order=desc&sort=votes&tagged=${tag}&site=stackoverflow&filter=!SmM8gcJ5EA-Fj.eW0)`
             // const url_votes = `http://localhost:8000/questions_votes`;
             
             
@@ -174,15 +174,11 @@ function Question({ tag }) {
         fetchData('votes');
     }, [tag]);
     if (!isLoading && votesData.items !== undefined && creationData.items !== undefined) {
-        const qus = [...votesData.items, ...creationData.items];
-        const sortedQus = [].concat(qus)
-            .sort((a, b) => a.creation_date > b.creation_date ? 1 : -1)
-            .map((item, i) => 
-                <div key={i}> {item.matchID} {item.timeM}{item.description}</div>
-            );
-        
+        let qus = [...votesData.items, ...creationData.items];
+        qus.sort((a, b) => (a.creation_date>b.creation_date) ? 1: -1);
+        // list.sort((a, b) => (a.color > b.color) ? 1 : -1)
         var items = []
-        for (let i = 0; i < sortedQus.length; i++) {
+        for (let i = 0; i < qus.length; i++) {
             items.push(<CardQuestion props={qus[i]} />)
         }
         return (
