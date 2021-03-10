@@ -18,9 +18,6 @@ import Answer from '../answer/Answer';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        // width: '50%',
-        // backgroundColor:'#ffffff',
-        // backgroundColor:'#2d7786',
     },
     accordion: {
         backgroundColor: 'transparent',
@@ -52,15 +49,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 function HandleAnswers(props) {
     const classes = useStyles();
-    // const [isLoading, setLoading] = useState(true)
-    // const [answer, setAnswer] = useState({ hits: [] });
-    // useEffect(() => {
-    //     async function fetchData() {
-    //         console.log(props)
-    //     }
-    //     fetchData();
-
-    // }, []);
     var items = []
     // console.log(props.props.answers)
     for (let i = 0; i < props.props.answers.length; i++) {
@@ -70,7 +58,6 @@ function HandleAnswers(props) {
         <div>
             <p>Answers</p>
             {items}
-            {/* <h1>Hello</h1> */}
         </div>
     );
 }
@@ -108,16 +95,13 @@ function CardQuestion(props) {
 
                     </Grid>
                     <Grid item xs={2}>
-                        {/* <Container maxWidth="sm"> */}
                             <Typography className={classes.heading}>Score : {props.props.score}</Typography>
-                        {/* </Container> */}
                     </Grid>
                 </Grid>
 
                 
                 
 
-                {/* <div>{props.name.title} {props.name.score} {props.name.creation_date}</div> */}
             </AccordionSummary>
             <AccordionDetails
                 classes={{
@@ -148,14 +132,11 @@ function Question({ tag }) {
 
     useEffect(() => {
         
-        async function fetchData(sort) {
+        async function fetchData() {
             setLoading(true);
-            setStartTime(new Date());
-            // const url = `https://api.stackexchange.com/2.2/questions?order=desc&sort=${sort}&site=stackoverflow&filter=!0VdjgZjD(j7sAWyaYznHKJthy&page=1&pagesize=10&tagged=${tag}`
-            // const url = `https://api.stackexchange.com/2.2/questions?order=desc&sort=${sort}&site=stackoverflow&filter=!9_bDDxJY5&page=1&pagesize=10&tagged=${tag}`
+            setStartTime(Date.now());
             
-            const url_votes = `https://api.stackexchange.com/2.2/questions?page=1&pagesize=10&order=desc&sort=votes&tagged=${tag}&site=stackoverflow&filter=!SmM8gcJ5EA-Fj.eW0)`
-            // const url_votes = `http://localhost:8000/questions_votes`;
+            const url_votes = `https://api.stackexchange.com/2.2/questions?page=1&pagesize=10&fromdate=${Math.round((Date.now()/1000) - 604800)}&order=desc&sort=votes&tagged=${tag}&site=stackoverflow&filter=!SmM8gcJ5EA-Fj.eW0)`
             
             
             // You can await here
@@ -163,7 +144,6 @@ function Question({ tag }) {
             setVotesData(result.data);
 
             const url_creation = `https://api.stackexchange.com/2.2/questions?page=1&pagesize=10&order=desc&sort=creation&tagged=${tag}&site=stackoverflow&filter=!SmM8gcJ5EA-Fj.eW0)`
-            // const url_creation = `http://localhost:8000/question_creation`;
             // You can await here
             result = await axios(url_creation);
             setcreationData(result.data);
@@ -171,24 +151,19 @@ function Question({ tag }) {
             setLoading(false);
             // ...
         }
-        fetchData('votes');
+        fetchData();
     }, [tag]);
     if (!isLoading && votesData.items !== undefined && creationData.items !== undefined) {
-        const qus = [...votesData.items, ...creationData.items];
-        const sortedQus = [].concat(qus)
-            .sort((a, b) => a.creation_date > b.creation_date ? 1 : -1)
-            .map((item, i) => 
-                <div key={i}> {item.matchID} {item.timeM}{item.description}</div>
-            );
-        
+        let qus = [...votesData.items, ...creationData.items];
+        qus.sort((a, b) => (a.creation_date < b.creation_date) ? 1: -1);
         var items = []
-        for (let i = 0; i < sortedQus.length; i++) {
+        for (let i = 0; i < qus.length; i++) {
             items.push(<CardQuestion props={qus[i]} />)
         }
         return (
             <div className="question-main">
                 {items}
-                <div>{new Date() - startTime} ms</div>
+                <div>{Date.now() - startTime} ms</div>
             </div>
         );
     } else {
