@@ -38,20 +38,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function App() {
   const classes = useStyles();
-  const [start, setStart] = useState(new Date());
-  const [end, setEnd] = useState(new Date());
 
   const [tag, setTag] = useState('');
   useEffect(() => {
-    setEnd(new Date())
-    // const interval = setInterval(
-    //   () => setValue(new Date()),
-    //   1000
-    // );
- 
-    // return () => {
-    //   clearInterval(interval);
-    // }
   }, [tag]);
   if (tag !== "") {
     return (
@@ -105,7 +94,6 @@ export default function App() {
               onRequestSearch={(newValue) => setTag(newValue)}
             />
           </header>
-          <p>Current time:</p>
         </div></>
     );
   }
