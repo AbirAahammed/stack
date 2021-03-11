@@ -65,7 +65,6 @@ export default function App() {
               <Question tag={tag} />
             </div>
           </header>
-          <p>Current time:</p>
       {/* <Clock value={value} /> */}
         </div>
       </>);
