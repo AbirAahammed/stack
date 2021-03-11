@@ -50,7 +50,6 @@ const useStyles = makeStyles((theme) => ({
 function HandleAnswers(props) {
     const classes = useStyles();
     var items = []
-    // console.log(props.props.answers)
     for (let i = 0; i < props.props.answers.length; i++) {
         items.push(<Answer className={classes.answer} props={props.props.answers[i]} />)
     }
@@ -75,11 +74,7 @@ function CardQuestion(props) {
         if (isLoading){
             fetchData();
         }
-        if (!isLoading) {
-            console.log(questionDetails.items[0]);
-          }
-
-    }, [questionDetails]);
+    }, []);
     return (
         <Accordion className={classes.accordion}>
             <AccordionSummary
