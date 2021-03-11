@@ -17,6 +17,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#79c3d2',
     padding: '20px',
     borderRadius: '15px',
+    overflow: 'auto'
+
   },
   heading: {
     fontSize: theme.typography.pxToRem(13),
