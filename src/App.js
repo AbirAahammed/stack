@@ -94,7 +94,6 @@ export default function App() {
               onRequestSearch={(newValue) => setTag(newValue)}
             />
           </header>
-          <p>Current time:</p>
         </div></>
     );
   }
