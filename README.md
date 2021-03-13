@@ -1,5 +1,6 @@
 # <span style="color:blue">Stacker :rocket:
 
+
 ## :book: <span style="color:blue">Introduction 
 This app is a streamlined version of stackoverflow coupled with faster speed and better performance.
 All Links:
@@ -56,3 +57,4 @@ While testing if too many api calls are made from one IP the service may stop, a
 * docker build -f Dockerfile.prod -t stacker:\<tag\>
 ### Docker run
 * docker run -it -d -p \<host-port\>:80 abirahammed/stacker
+
