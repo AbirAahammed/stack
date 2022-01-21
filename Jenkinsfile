@@ -6,7 +6,7 @@ node('jerry') {
             checkout scm
     }
     stage('Build image') {
-            app = docker.build('abirahammed/stacker')
+            app = docker.build("abirahammed/stacker:${env.BUILD_NUMBER}")
     }
     stage('Test image') {
             app.inside {
