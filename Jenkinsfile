@@ -1,12 +1,12 @@
 #!groovy
 
-node('tom') {
+node('jerry') {
     def app
     stage('Clone repository') {
             checkout scm
     }
     stage('Build image') {
-            app = docker.build('abirahammed/stacker')
+            app = docker.build('brandonjones085/test')
     }
     stage('Test image') {
             app.inside {
@@ -14,7 +14,7 @@ node('tom') {
             }
     }
     stage('Push image') {
-    withDockerRegistry(credentialsId: '25451f03-9f96-4326-abb0-73abd60d8aea', url: 'https://hub.docker.com/repositories') {
+        docker.withRegistry('https://registry.hub.docker.com', 'Mac-log-on') {
             app.push("${env.BUILD_NUMBER}")
             app.push('latest')
         }
