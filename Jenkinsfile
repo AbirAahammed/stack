@@ -14,7 +14,7 @@ node('jerry') {
             }
     }
     stage('Push image') {
-        docker.withRegistry('https://hub.docker.com', '25451f03-9f96-4326-abb0-73abd60d8aea') {
+        docker.withRegistry('https://hub.docker.com', 'Dockerhub-login') {
             app.push("${env.BUILD_NUMBER}")
             app.push('latest')
         }
