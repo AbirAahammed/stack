@@ -1,6 +1,6 @@
 #!groovy
 
-node('jerry') {
+node('tom') {
     def app
     stage('Clone repository') {
             checkout scm
