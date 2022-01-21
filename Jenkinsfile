@@ -1,12 +1,22 @@
 #!groovy
 
 node('jerry') {
-  stage ('Checkout') {
-    checkout scm
-  }
-
-  stage('Check Env Parameters'){
-    echo "Branch Name : ${env.GIT_BRANCH}"
-    echo "Octo Server Address : ${env.octoServer}"
-  }
+    def app
+    stage('Clone repository') {
+            checkout scm
+    }
+    stage('Build image') {
+            app = docker.build('abirahammed/stacker')
+    }
+    stage('Test image') {
+            app.inside {
+            sh 'echo "Tests passed"'
+            }
+    }
+    // stage('Push image') {
+    //     docker.withRegistry('https://registry.hub.docker.com', 'git') {
+    //         app.push("${env.BUILD_NUMBER}")
+    //         app.push('latest')
+    //     }
+    // }
 }
