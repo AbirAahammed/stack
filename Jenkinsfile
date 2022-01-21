@@ -14,7 +14,7 @@ node('jerry') {
             }
     }
     stage('Push image') {
-        docker.withRegistry('https://registry.hub.docker.com', 'Mac-log-on') {
+        docker.withRegistry('https://hub.docker.com/', 'Mac-log-on') {
             app.push("${env.BUILD_NUMBER}")
             app.push('latest')
         }
