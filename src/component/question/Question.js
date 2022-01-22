@@ -92,10 +92,10 @@ function CardQuestion(props) {
                     <Grid item xs={2}>
                             <Typography className={classes.heading}>Score : {props.props.score}</Typography>
                     </Grid>
-        
+    
                 </Grid>
 
-        
+
             </AccordionSummary>
             <AccordionDetails
                 classes={{
