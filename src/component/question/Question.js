@@ -94,9 +94,8 @@ function CardQuestion(props) {
                     </Grid>
                 </Grid>
 
-                
-                
     
+            
             </AccordionSummary>
             <AccordionDetails
                 classes={{
