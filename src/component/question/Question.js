@@ -95,10 +95,6 @@ function CardQuestion(props) {
         
                 </Grid>
 
-    
-            
-
-
             
             </AccordionSummary>
             <AccordionDetails
