@@ -93,6 +93,7 @@ function CardQuestion(props) {
                             <Typography className={classes.heading}>Score : {props.props.score}</Typography>
                     </Grid>
     
+    
                 </Grid>
 
 
