@@ -20,7 +20,7 @@
     "react-clock": "^3.0.0",
     "react-dom": "^17.0.1",
     "react-html-parser": "^2.0.2",
-    "react-native": "^0.63.4",
+    "react-native": "^0.64.1",
     "react-native-render-html": "^5.1.0",
     "react-render-html": "^0.6.0",
     "react-router-dom": "^5.2.0",
